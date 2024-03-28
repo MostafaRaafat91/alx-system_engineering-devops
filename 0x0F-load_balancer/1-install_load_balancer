@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# This script configures HAProxy to send traffic to web-01 and web-02
+
+sudo apt-get update
+sudo apt-get -y install haproxy
+
+cat <<EOF | sudo tee /etc/haproxy/haproxy.cfg
+frontend main
+    bind *:80
+    default_backend web_servers
+
+backend web_servers
+    balance roundrobin
+    server web-01 54.157.191.159:80 check
+    server web-02 54.208.237.169:80 check
+EOF
+
+sudo service haproxy restart
+sudo update-rc.d haproxy enable
