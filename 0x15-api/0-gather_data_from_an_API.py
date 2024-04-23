@@ -7,16 +7,30 @@ return information about the employee's todo list progress
 import requests
 from sys import argv
 
-if __name__ == '__main__':
-    userId = argv[1]
-    user = requests.get("https://jsonplaceholder.typicode.com/users/{}".
-                        format(userId), verify=False).json()
-    todo = requests.get("https://jsonplaceholder.typicode.com/todos?userId={}".
-                        format(userId), verify=False).json()
-    completed_tasks = []
-    for task in todo:
-        if task.get('completed') is True:
-            completed_tasks.append(task.get('title'))
-    print("Employee {} is done with tasks({}/{}):".
-          format(user.get('name'), len(completed_tasks), len(todo)))
-    print("\n".join("\t {}".format(task) for task in completed_tasks))
+def get_employee_todo_list(user_id):
+    try:
+        # Fetch user data
+        user_response = requests.get(f"https://jsonplaceholder.typicode.com/users/{user_id}")
+        user_data = user_response.json()
+
+        # Fetch user's todo list
+        todo_response = requests.get(f"https://jsonplaceholder.typicode.com/todos?userId={user_id}")
+        todo_list = todo_response.json()
+
+        # Filter completed tasks
+        completed_tasks = [task['title'] for task in todo_list if task['completed']]
+
+        # Print summary
+        print(f"Employee {user_data['name']} is done with tasks ({len(completed_tasks)}/{len(todo_list)}):")
+        for task in completed_tasks:
+            print(f"\t{task}")
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching data: {e}")
+
+if __name__ == "__main__":
+    if len(argv) != 2:
+        print("Usage: python main.py <user_id>")
+    else:
+        user_id = argv[1]
+        get_employee_todo_list(user_id)
