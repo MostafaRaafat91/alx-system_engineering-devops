@@ -1,0 +1,97 @@
+Certainly! Let's design a web infrastructure for hosting the website reachable via `www.foobar.com`. I'll break down the components and their roles, as well as address the issues with this setup.
+
+### Infrastructure Design:
+
+1. **Server:**
+   - We'll start with a single server. This server will host all the necessary components.
+   - The server's IP address is 8.8.8.8.
+
+2. **Domain Name (DNS):**
+   - The domain name `foobar.com` needs to be configured with a `www` record pointing to our server's IP address (8.8.8.8).
+   - DNS (Domain Name System) translates human-readable domain names (like `www.foobar.com`) into IP addresses.
+
+3. **Web Server (Nginx):**
+   - The web server (Nginx, in this case) handles HTTP requests from clients (browsers) and serves static content (HTML, CSS, JavaScript, images, etc.).
+   - It listens on port 80 (HTTP) and 443 (HTTPS) and routes requests to the appropriate application server.
+
+4. **Application Server:**
+   - The application server hosts the dynamic part of the website. It executes server-side code (e.g., PHP, Python, Node.js) and interacts with the database.
+   - In our case, let's assume we're using a Python-based application server.
+   - It communicates with the web server via FastCGI or other protocols.
+
+5. **Application Files (Code Base):**
+   - Your application code (e.g., Python scripts, HTML templates, etc.) resides on the server.
+   - The application server executes this code to generate dynamic content.
+
+6. **Database (MySQL):**
+   - The database (MySQL) stores data (user accounts, product information, etc.) for the website.
+   - The application server communicates with the database to retrieve or update data.
+   - MySQL listens on its default port (3306).
+
+7. **User Request Flow:**
+   - A user types `www.foobar.com` in their browser.
+   - DNS resolves `www.foobar.com` to our server's IP address (8.8.8.8).
+   - The request reaches the web server (Nginx).
+   - Nginx forwards the request to the application server.
+   - The application server processes the request, retrieves data from the database, and generates a response.
+   - The response flows back through Nginx to the user's browser.
+
+### Issues with This Infrastructure:
+
+1. **Single Point of Failure (SPOF):**
+   - Since we have only one server, any failure (hardware, software, or network) would cause downtime.
+   - To mitigate this, consider redundancy (multiple servers) or cloud-based solutions.
+
+2. **Downtime during Maintenance:**
+   - When deploying new code or performing maintenance, the web server needs to be restarted.
+   - During this time, the website may be unavailable.
+   - Solutions include load balancers and rolling deployments.
+
+3. **Scalability:**
+   - With only one server, we can't handle high traffic.
+   - To scale, consider load balancing (multiple servers) and horizontal scaling (adding more servers).
+Certainly! Here's a visual representation of the web infrastructure for FAPAY (www.foobar.com):
+
+---
+
+```
++-------------------+       +-------------------+       +-------------------+
+|                   |       |                   |       |                   |
+|   User's Browser  |       |       Nginx       |       |   Application     |
+|                   |       |                   |       |    Server         |
+|                   |       |                   |       |                   |
+|  www.foobar.com   | ----> | 8.8.8.8 (Server)  | ----> | Python (App)     |
+|                   |       |                   |       |                   |
+|                   |       |                   |       |                   |
++-------------------+       +-------------------+       +-------------------+
+        |                           |                           |
+        |                           |                           |
+        |                           |                           |
+        |                           |                           |
+        v                           v                           v
++-------------------+       +-------------------+       +-------------------+
+|                   |       |                   |       |                   |
+|    DNS Server     |       |    Web Server     |       |    MySQL DB       |
+|                   |       |    (Nginx)        |       |                   |
+|                   |       |                   |       |                   |
+|   Resolves        |       |   Listens on      |       |   Stores data     |
+|   www.foobar.com  |       |   ports 80, 443   |       |   (user accounts, |
+|   to 8.8.8.8      | <---- |   Serves static   | <---- |   product info)   |
+|                   |       |   content         |       |                   |
+|                   |       |                   |       |                   |
++-------------------+       +-------------------+       +-------------------+
+```
+
+---
+
+Explanation:
+- The user types `www.foobar.com` in their browser.
+- DNS resolves `www.foobar.com` to the server's IP address (8.8.8.8).
+- Nginx (web server) handles HTTP requests and routes them to the Python application server.
+- The application server processes requests, interacts with the MySQL database, and generates dynamic content.
+
+Issues:
+1. **Single Point of Failure (SPOF):** Consider redundancy (multiple servers).
+2. **Downtime during Maintenance:** Use rolling deployments or load balancers.
+3. **Scalability:** Explore load balancing and horizontal scaling.
+

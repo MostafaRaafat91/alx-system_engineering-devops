@@ -1,0 +1,100 @@
+Certainly! Let's design a three-server web infrastructure for hosting the website www.foobar.com. I'll explain each component and address the specified points.
+
+### Infrastructure Design:
+
+1. **Server 1 (Web Server):**
+   - This server hosts the Nginx web server.
+   - Nginx handles HTTP requests, serves static content, and acts as the entry point for incoming traffic.
+   - Why? Nginx efficiently manages connections, load balancing, and SSL termination.
+
+2. **Server 2 (Application Server):**
+   - The application server executes server-side code (e.g., Python, Node.js, Java).
+   - It generates dynamic content based on user requests.
+   - Why? Separating application logic from the web server allows scalability and flexibility.
+
+3. **Server 3 (Database Server - MySQL):**
+   - MySQL stores data (user accounts, product info, etc.).
+   - The application server communicates with the database to read/write data.
+   - Why? Centralized data storage and efficient data retrieval.
+
+4. **Load Balancer (HAProxy):**
+   - HAProxy distributes incoming requests across multiple servers (web and app).
+   - It uses a distribution algorithm (e.g., round-robin, least connections) to balance the load.
+   - Why? Load balancing ensures high availability, fault tolerance, and scalability.
+
+5. **Application Files (Code Base):**
+   - Your code (application logic, HTML templates, etc.) resides here.
+   - The application server executes this code.
+   - Why? Separating code from infrastructure simplifies maintenance and updates.
+
+### Specifics Explained:
+
+- **Load Balancer Algorithm:**
+  - HAProxy can use various algorithms:
+    - **Round-Robin:** Cycles through servers sequentially.
+    - **Least Connections:** Sends requests to the server with the fewest active connections.
+    - **Source IP Hash:** Distributes based on the client's IP address.
+  - The chosen algorithm depends on the use case and performance requirements.
+
+- **Active-Active vs. Active-Passive:**
+  - **Active-Active:** All servers handle traffic simultaneously. Scalable but complex.
+  - **Active-Passive:** One server (active) handles traffic; others remain idle (passive). Failover occurs if the active server fails.
+  - Choose based on workload and redundancy needs.
+
+- **Database Primary-Replica Cluster:**
+  - **Primary (Master):** Accepts write operations (INSERT, UPDATE, DELETE).
+  - **Replica (Slave):** Replicates data from the primary. Read-only operations (SELECT) can be performed.
+  - Replication ensures data consistency and fault tolerance.
+
+- **Issues with This Infrastructure:**
+  1. **Single Point of Failure (SPOF):** Each server is still a potential SPOF. Consider redundancy (more servers) or cloud-based solutions.
+  2. **Security Issues:**
+     - No firewall: Implement a firewall to control incoming/outgoing traffic.
+     - No HTTPS: Add SSL certificates to secure data in transit.
+  3. **No Monitoring:** Implement monitoring tools (e.g., Prometheus, Grafana) to track server health, performance, and resource usage.
+
+
+
+```
++-------------------+       +-------------------+       +-------------------+
+|                   |       |                   |       |                   |
+|   User's Browser  |       |       Nginx       |       |   Application     |
+|                   |       |                   |       |    Server         |
+|                   |       |                   |       |                   |
+|  www.foobar.com   | ----> | 8.8.8.8 (Server)  | ----> | Python (App)     |
+|                   |       |                   |       |                   |
+|                   |       |                   |       |                   |
++-------------------+       +-------------------+       +-------------------+
+        |                           |                           |
+        |                           |                           |
+        |                           |                           |
+        |                           |                           |
+        v                           v                           v
++-------------------+       +-------------------+       +-------------------+
+|                   |       |                   |       |                   |
+|    DNS Server     |       |    Web Server     |       |    MySQL DB       |
+|                   |       |    (Nginx)        |       |                   |
+|                   |       |                   |       |                   |
+|   Resolves        |       |   Listens on      |       |   Stores data     |
+|   www.foobar.com  |       |   ports 80, 443   |       |   (user accounts, |
+|   to 8.8.8.8      | <---- |   Serves static   | <---- |   product info)   |
+|                   |       |   content         |       |                   |
+|                   |       |                   |       |                   |
++-------------------+       +-------------------+       +-------------------+
+```
+
+---
+
+Explanation:
+- The user types `www.foobar.com` in their browser.
+- DNS resolves `www.foobar.com` to the server's IP address (8.8.8.8).
+- Nginx (web server) handles HTTP requests and routes them to the Python application server.
+- The application server processes requests, interacts with the MySQL database, and generates dynamic content.
+
+Issues with This Infrastructure:
+1. **Single Point of Failure (SPOF):** Each server is still a potential SPOF. Consider redundancy (more servers) or cloud-based solutions.
+2. **Security Issues:**
+   - Implement a firewall to control incoming/outgoing traffic.
+   - Add SSL certificates (HTTPS) for secure data transmission.
+3. **No Monitoring:** Implement monitoring tools (e.g., Prometheus, Grafana) to track server health and performance.
+

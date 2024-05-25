@@ -1,0 +1,79 @@
+Certainly! Let's design a three-server web infrastructure for hosting www.foobar.com with the specified requirements. I'll provide an ASCII art diagram and explain each component.
+
+---
+
+```
++-------------------+       +-------------------+       +-------------------+
+|                   |       |                   |       |                   |
+|   User's Browser  |       |       Nginx       |       |   Application     |
+|                   |       |                   |       |    Server         |
+|                   |       |                   |       |                   |
+|  www.foobar.com   | ----> | 8.8.8.8 (Server)  | ----> | Python (App)     |
+|                   |       |                   |       |                   |
+|                   |       |                   |       |                   |
++-------------------+       +-------------------+       +-------------------+
+        |                           |                           |
+        |                           |                           |
+        |                           |                           |
+        |                           |                           |
+        v                           v                           v
++-------------------+       +-------------------+       +-------------------+
+|                   |       |                   |       |                   |
+|    DNS Server     |       |    Web Server     |       |    MySQL DB       |
+|                   |       |    (Nginx)        |       |                   |
+|                   |       |                   |       |                   |
+|   Resolves        |       |   Listens on      |       |   Stores data     |
+|   www.foobar.com  |       |   ports 80, 443   |       |   (user accounts, |
+|   to 8.8.8.8      | <---- |   Serves static   | <---- |   product info)   |
+|                   |       |   content         |       |                   |
+|                   |       |                   |       |                   |
++-------------------+       +-------------------+       +-------------------+
+```
+
+---
+
+Explanation:
+- The user types `www.foobar.com` in their browser.
+- DNS resolves `www.foobar.com` to the server's IP address (8.8.8.8).
+- Nginx (web server) handles HTTP requests and routes them to the Python application server.
+- The application server processes requests, interacts with the MySQL database, and generates dynamic content.
+
+### Additional Elements and Explanations:
+
+1. **Firewalls:**
+   - We add firewalls to protect the servers from unauthorized access.
+   - Firewalls filter incoming and outgoing traffic based on predefined rules.
+
+2. **SSL Certificate (HTTPS):**
+   - We use an SSL certificate to enable HTTPS (encrypted traffic).
+   - HTTPS ensures secure communication between the user's browser and the web server.
+
+3. **Monitoring Clients (Data Collectors):**
+   - Monitoring tools (e.g., Sumologic) collect data for analysis.
+   - Data collectors monitor server performance, logs, and metrics.
+
+### Monitoring and Data Collection:
+
+- Monitoring helps track server health, resource usage, and potential issues.
+- Data collectors collect logs, metrics, and events from servers and services.
+
+### Monitoring Web Server QPS:
+
+- To monitor web server QPS (Queries Per Second):
+  - Set up monitoring tools to collect request counts.
+  - Analyze the data to understand traffic patterns and identify bottlenecks.
+
+### Issues with This Infrastructure:
+
+1. **Terminating SSL at Load Balancer Level:**
+   - SSL termination at the load balancer exposes decrypted traffic internally.
+   - Consider end-to-end encryption (terminate SSL at the application server).
+
+2. **Single MySQL Server for Writes:**
+   - Having only one MySQL server accepting writes is a single point of failure.
+   - Consider replication (Master-Slave setup) for fault tolerance.
+
+3. **Servers with Identical Components:**
+   - Uniform servers may lead to resource contention (e.g., CPU, memory).
+   - Optimize resource allocation based on workload.
+

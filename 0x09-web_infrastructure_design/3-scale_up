@@ -1,0 +1,63 @@
+Certainly! Let's create an ASCII art diagram for the web infrastructure that distinguishes between the application server and the web server. I'll explain each component as well.
+
+---
+
+```
++-------------------+       +-------------------+
+|                   |       |                   |
+|   User's Browser  |       |       Nginx       |
+|                   |       |                   |
+|  www.foobar.com   | ----> | 8.8.8.8 (Server)  |
+|                   |       |                   |
++-------------------+       +-------------------+
+        |                           |
+        |                           |
+        |                           |
+        v                           v
++-------------------+       +-------------------+
+|                   |       |                   |
+|    DNS Server     |       |    Web Server     |
+|                   |       |    (Nginx)        |
+|                   |       |                   |
+|   Resolves        |       |   Listens on      |
+|   www.foobar.com  |       |   ports 80, 443   |
+|   to 8.8.8.8      | <---- |   Serves static   |
+|                   |       |   content         |
+|                   |       |                   |
++-------------------+       +-------------------+
+        |                           |
+        |                           |
+        |                           |
+        v                           v
++-------------------+       +-------------------+
+|                   |       |                   |
+|    Application    |       |    MySQL DB       |
+|    Server         |       |                   |
+|                   |       |                   |
+|   Executes        |       |   Stores data     |
+|   server-side     |       |   (user accounts, |
+|   code            |       |   product info)   |
+|                   |       |                   |
++-------------------+       +-------------------+
+```
+
+---
+
+Explanation:
+- The user types `www.foobar.com` in their browser.
+- DNS resolves `www.foobar.com` to the server's IP address (8.8.8.8).
+- Nginx (web server) handles HTTP requests and serves static content.
+- The application server executes server-side code (Python, Node.js, etc.).
+- The MySQL database stores data (user accounts, product info).
+
+### Additional Elements and Explanations:
+
+1. **Load-Balancer (HAProxy):**
+   - We add a load balancer (HAProxy) to distribute traffic between the web server and the application server.
+   - Load balancing ensures high availability and efficient resource utilization.
+
+2. **Split Components:**
+   - Separating components (web server, app server, database) onto their own servers allows scalability and isolation.
+   - Each component can be optimized independently.
+
+Remember that this design can be customized further based on specific project needs! 😊
