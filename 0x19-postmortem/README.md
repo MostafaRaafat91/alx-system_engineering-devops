@@ -14,8 +14,7 @@
 - **10:15 AM**: Engineers noticed the problem and initiated investigation.
 - **10:30 AM**: Assumed root cause: Database server overload due to increased traffic.
 - **11:00 AM**: Investigated database performance metrics, but no clear evidence.
-- **11:30 AM**: Misleading path: Focused on frontend servers, suspecting load balancerCertainly! Let's continue with the postmortem:
-
+- **11:30 AM**: Misleading path: Focused on frontend servers, suspecting load balancerCertainly! Let's continue with the postmortem
 ---
 
 # Postmortem: Web Application Outage (Continued)
